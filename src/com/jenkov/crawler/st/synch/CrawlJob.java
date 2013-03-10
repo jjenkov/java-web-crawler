@@ -41,12 +41,6 @@ public class CrawlJob {
                     String linkUrl       = element.attr("href");
                     String normalizedUrl = UrlNormalizer.normalize(linkUrl, baseUrl);
 
-                    if(linkUrl.indexOf("../") > -1){
-                        System.out.println("*** linkUrl:   " + linkUrl + "   -   " + baseUrl + "(" + normalizedUrl + ")");
-                    }
-
-                    //System.out.println(normalizedUrl + " : " + linkUrl);
-
                     this.crawler.addUrl(normalizedUrl);
                 }
 

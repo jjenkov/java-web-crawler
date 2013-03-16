@@ -1,4 +1,4 @@
-package com.jenkov.crawler.st.synch;
+package com.jenkov.crawler.mt.io;
 
 import com.jenkov.crawler.util.UrlNormalizer;
 import org.jsoup.Jsoup;
@@ -10,19 +10,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * @author Jakob Jenkov and Emmanuel John
  */
-public class CrawlJob {
+public class CrawlJobMT implements Runnable {
 
-    protected Crawler crawler    = null;
+    protected CrawlerMT crawler    = null;
     protected String  urlToCrawl = null;
-
-    public CrawlJob(String urlToCrawl, Crawler crawler) {
+    
+    public CrawlJobMT(String urlToCrawl, CrawlerMT crawler) {
         this.urlToCrawl = urlToCrawl;
         this.crawler    = crawler;
     }
-
+    @Override
+    public void run(){
+        try{
+            crawl();
+        }catch(Exception ex){
+            
+        }
+    }
     public void crawl() throws IOException{
 
         URL url = new URL(this.urlToCrawl);
@@ -40,13 +50,15 @@ public class CrawlJob {
                 for(Element element : elements){
                     String linkUrl       = element.attr("href");
                     String normalizedUrl = UrlNormalizer.normalize(linkUrl, baseUrl);
-
-                    this.crawler.addUrl(normalizedUrl);
+                    crawler.linksQueue.add(normalizedUrl);
+                    
+                    System.out.println(" - "+normalizedUrl);
+                    
                 }
 
             } catch (IOException e) {
                 throw new RuntimeException("Error connecting to URL", e);
-            }
+            } 
         } catch(IOException e) {
             throw new RuntimeException("Error connecting to URL", e);
         }

@@ -1,6 +1,5 @@
 package com.jenkov.crawler.util;
 
-import com.jenkov.crawler.util.IUrlFilter;
 
 /**
  */

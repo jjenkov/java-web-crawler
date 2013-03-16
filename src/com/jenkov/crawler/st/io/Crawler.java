@@ -1,4 +1,4 @@
-package com.jenkov.crawler.st.synch;
+package com.jenkov.crawler.st.io;
 
 import com.jenkov.crawler.util.IUrlFilter;
 

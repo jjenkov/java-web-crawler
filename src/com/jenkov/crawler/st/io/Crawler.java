@@ -16,11 +16,19 @@ public class Crawler {
     protected List<String> urlsToCrawl = new ArrayList<String>();
     protected Set<String>  crawledUrls = new HashSet<String>();
 
+    protected IPageProcessor pageProcessor = null;
 
-    public Crawler(IUrlFilter urlFilter) {
+
+    public Crawler() {
+    }
+
+    public void setUrlFilter(IUrlFilter urlFilter) {
         this.urlFilter = urlFilter;
     }
 
+    public void setPageProcessor(IPageProcessor pageProcessor) {
+        this.pageProcessor = pageProcessor;
+    }
 
     public void addUrl(String url) {
         this.urlsToCrawl.add(url);
@@ -41,7 +49,7 @@ public class Crawler {
 
             try {
                 System.out.println(nextUrl);
-                CrawlJob crawlJob = new CrawlJob(nextUrl, this);
+                CrawlJob crawlJob = new CrawlJob(nextUrl, this.pageProcessor, this);
 
                 crawlJob.crawl();
             } catch (Exception e) {

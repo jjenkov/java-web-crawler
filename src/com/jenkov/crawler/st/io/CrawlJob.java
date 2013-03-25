@@ -15,12 +15,15 @@ import java.net.URLConnection;
  */
 public class CrawlJob {
 
-    protected Crawler crawler    = null;
-    protected String  urlToCrawl = null;
+    protected Crawler        crawler       = null;
+    protected String         urlToCrawl    = null;
+    protected IPageProcessor pageProcessor = null;
 
-    public CrawlJob(String urlToCrawl, Crawler crawler) {
-        this.urlToCrawl = urlToCrawl;
-        this.crawler    = crawler;
+
+    public CrawlJob(String urlToCrawl, IPageProcessor pageProcessor, Crawler crawler) {
+        this.urlToCrawl    = urlToCrawl;
+        this.pageProcessor = pageProcessor;
+        this.crawler       = crawler;
     }
     
     public void crawl() throws IOException{
@@ -42,6 +45,9 @@ public class CrawlJob {
                     String normalizedUrl = UrlNormalizer.normalize(linkUrl, baseUrl);
 
                     this.crawler.addUrl(normalizedUrl);
+                }
+                if(this.pageProcessor != null) {
+                    this.pageProcessor.process(doc);
                 }
 
             } catch (IOException e) {

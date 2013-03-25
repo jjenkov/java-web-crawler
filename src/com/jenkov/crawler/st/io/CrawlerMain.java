@@ -3,6 +3,9 @@ package com.jenkov.crawler.st.io;
 import com.jenkov.crawler.util.SameWebsiteOnlyFilter;
 
 /**
+ * This class is an example of how to use the Crawler class. You should
+ * not expect to use this class as it is. Use the Crawler class directly
+ * from your own code.
  */
 public class CrawlerMain {
 
@@ -15,8 +18,12 @@ public class CrawlerMain {
 
         //String url = args[0];
         String url ="http://tutorials.jenkov.com";
-        Crawler crawler  = new Crawler(new SameWebsiteOnlyFilter(url));
+
+        Crawler crawler  = new Crawler();
+        crawler.setUrlFilter(new SameWebsiteOnlyFilter(url));
+        crawler.setPageProcessor(null); // set an IPageProcessor instance here.
         crawler.addUrl(url);
+
         crawler.crawl();
     }
 }

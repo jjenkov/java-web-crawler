@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <project name="WebUI" default="zip-all" basedir=".">
 
     <property name="dir.build"         value="build"/>

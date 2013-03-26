@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<project name="WebUI" default="zip-all" basedir=".">
+
+    <property name="dir.build"         value="build"/>
+    <property name="dir.build.classes" value="${dir.build}/classes"/>
+    <property name="version"           value="1.0.0"/>
+
+
+    <path id="jsoup.path">
+        <fileset dir="D:/data/java/products/jsoup">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <delete  dir="${dir.build}"        />
+        <mkdir   dir="${dir.build}"        />
+        <mkdir   dir="${dir.build.classes}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="src" destdir="${dir.build.classes}" classpathref="jsoup.path">
+
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${dir.build}/crawler-${version}.jar"
+             basedir="${dir.build.classes}"/>
+    </target>
+
+</project>

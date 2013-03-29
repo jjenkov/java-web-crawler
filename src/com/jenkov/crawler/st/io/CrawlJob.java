@@ -10,20 +10,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
 public class CrawlJob {
 
-    protected Crawler        crawler       = null;
-    protected String         urlToCrawl    = null;
-    protected IPageProcessor pageProcessor = null;
+    protected Crawler              crawler        = null;
+    protected String               urlToCrawl     = null;
+    protected List<IPageProcessor> pageProcessors = new ArrayList<IPageProcessor>();
 
 
-    public CrawlJob(String urlToCrawl, IPageProcessor pageProcessor, Crawler crawler) {
+    public CrawlJob(String urlToCrawl, IPageProcessor pageProcessor) {
         this.urlToCrawl    = urlToCrawl;
-        this.pageProcessor = pageProcessor;
         this.crawler       = crawler;
+    }
+
+    public void addPageProcessor(IPageProcessor pageProcessor) {
+        this.pageProcessors.add(pageProcessor);
     }
     
     public void crawl() throws IOException{
@@ -37,17 +42,8 @@ public class CrawlJob {
             try (InputStream input = urlConnection.getInputStream()) {
 
                 Document doc      = Jsoup.parse(input, "UTF-8", "");
-                Elements elements = doc.select("a");
-
-                String baseUrl = url.toExternalForm();
-                for(Element element : elements){
-                    String linkUrl       = element.attr("href");
-                    String normalizedUrl = UrlNormalizer.normalize(linkUrl, baseUrl);
-
-                    this.crawler.addUrl(normalizedUrl);
-                }
-                if(this.pageProcessor != null) {
-                    this.pageProcessor.process(doc);
+                for(IPageProcessor pageProcessor : pageProcessors ){
+                    pageProcessor.process(this.urlToCrawl, doc);
                 }
 
             } catch (IOException e) {

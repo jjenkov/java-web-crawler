@@ -1,6 +1,10 @@
 package com.jenkov.crawler.st.io;
 
 import com.jenkov.crawler.util.IUrlFilter;
+import com.jenkov.crawler.util.UrlNormalizer;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,7 +53,23 @@ public class Crawler {
 
             try {
                 System.out.println(nextUrl);
-                CrawlJob crawlJob = new CrawlJob(nextUrl, this.pageProcessor, this);
+                CrawlJob crawlJob = new CrawlJob(nextUrl, this.pageProcessor);
+
+                crawlJob.addPageProcessor(new IPageProcessor() {
+                    @Override
+                    public void process(String url, Document doc) {
+                        Elements elements = doc.select("a");
+
+                        String baseUrl = url;
+                        for(Element element : elements){
+                            String linkUrl       = element.attr("href");
+                            String normalizedUrl = UrlNormalizer.normalize(linkUrl, baseUrl);
+
+                            addUrl(normalizedUrl);
+                        }
+
+                    }
+                });
 
                 crawlJob.crawl();
             } catch (Exception e) {

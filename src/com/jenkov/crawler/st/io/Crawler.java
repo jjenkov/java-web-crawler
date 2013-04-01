@@ -91,6 +91,7 @@ public class Crawler {
         }
         if(this.crawledUrls.contains(nextUrl)) { return false; }
         if(nextUrl.startsWith("javascript:"))  { return false; }
+        if(nextUrl.contains("mailto:"))        { return false; }
         if(nextUrl.startsWith("#"))            { return false; }
         if(nextUrl.endsWith(".swf"))           { return false; }
         if(nextUrl.endsWith(".pdf"))           { return false; }

@@ -17,7 +17,9 @@ public class CrawlerMain {
         }*/
 
         //String url = args[0];
-        String url ="http://tutorials.jenkov.com";
+        //String url ="http://tutorials.jenkov.com";
+        //String url ="http://martinfowler.com";
+        String url ="http://www.vogella.com";
 
         Crawler crawler  = new Crawler();
         crawler.setUrlFilter(new SameWebsiteOnlyFilter(url));

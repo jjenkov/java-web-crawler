@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,7 +26,9 @@ public class CrawlerMT {
     protected Set<String>  crawledUrls = new HashSet<>();
     private ExecutorService crawlService;
     protected final LinkedBlockingQueue<String> linksQueue = new LinkedBlockingQueue<>();
-
+    protected CyclicBarrier barrier = new CyclicBarrier(2);
+    
+    
     public CrawlerMT(IUrlFilter urlFilter) {
         this.urlFilter = urlFilter;
     }
@@ -61,21 +65,18 @@ public class CrawlerMT {
             try {
                 System.out.println(nextUrl);
                 CrawlJobMT crawlJob = new CrawlJobMT(nextUrl, this);
-                
                 crawlService.submit(crawlJob);
-                
                 //neads further refactoring
                 //this serves only for testing
                 synchronized(this){
                     count++;
-                    if(linksQueue.isEmpty()){
-
-                        Thread.sleep(3000);// pause the thread for 3 seconds so producer threads can add to the pool
-                    }
-                        
+                     
+                }
+                if(linksQueue.isEmpty()){
+                      barrier.await();
                 }
                 
-            } catch (Exception e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 System.out.println("Error crawling URL: " + nextUrl);
             }
             

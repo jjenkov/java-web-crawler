@@ -23,7 +23,7 @@ public class CrawlerMT {
 
     protected IUrlFilter urlFilter     = null;
     
-    protected Set<String>  crawledUrls = new HashSet<>();
+    protected Set<String>  crawledUrls = new HashSet<String>();
     private ExecutorService crawlService;
     protected final LinkedBlockingQueue<String> linksQueue = new LinkedBlockingQueue<>();
     protected CyclicBarrier barrier = new CyclicBarrier(2);
